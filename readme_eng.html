@@ -1,0 +1,606 @@
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" href="sj-validator-1.0.css" />
+		<script type="text/javascript" src="sj-validator-1.0.js"></script>
+		<style>
+			body  {background:rgba(100,100,100,0); margin:0px;}
+			table { border:5px solid #555555;}
+			tr,td { border-bottom:; border-radius:3px; margin:0px; padding:0px; font-weight:bold;}
+			input {font-size:12pt;}
+			[a] { background:#aaaaaa; }
+			[b] { background:; }
+			
+			[intro] {display:block; background:black; color:white; width:100%; }
+			[index] {display:block; font-size:15pt;}
+			[box] { border:0px solid; border-radius:5px; width:1200px; background:rgba(225,225,225,1); margin:5px; padding:5px; font-weight:bold;}
+			[source] { display:inline-block; border:3px solid; border-radius:5px; width: 98%; background:rgba(255,255,255,1); margin:5px; padding:5px; font-weight:bold;}
+			[run] { display:inline-block; border:5px solid #cccccc; border-radius:5px; width:; background:rgba(255,255,255,.1); margin:5px; padding:5px; font-weight:bold;}
+			[test] { border:0px solid; border-radius:5px; width:98%; background:skyblue; margin:5px; padding:5px; font-weight:bold;}
+			
+			[el] {color: rgba(50, 150, 90, .8);}
+			[prop] {color: rgba(170, 44, 77, 1);}
+			[val] {color:blue;}
+			
+			#inputTest1, #inputTest2
+			,#scriptTest
+			,#scriptTest1, #scriptTest2, #scriptTest3, #scriptTest4
+			 {display:inline-block; border:0px solid; border-radius:5px; width:100px; background:rgba(50,50,50,.1); margin:0px;  font-weight:bold;}
+			 
+			 #topMenu {border-bottom:3px solid #555555; border-radius:0px 0px 15px 15px;}
+			 #topMenu button{display:inline;background:black; border:0px solid; border-radius:20px; color:white; font-weight:bold;}
+			 #topMenu button:hover{background:white; color:black; cursor:pointer;}
+			 #topMenu button:focus{border:2px dashed; }
+		</style>
+		<script>
+			/**
+			 * 작성자 : sujung kim * 
+			 * 작성일 : 15. 04. 09
+			 * fixed top
+			 * 
+			 * @param obj is what you want to be fixed
+			 */
+			var qMenuY = 0;
+			function sjTopFixed(obj){
+				if(obj.style.position != "fixed"){
+					qMenuY = obj.offsetTop;		
+				}
+				/*천장에 닿으면*/
+				if(0 > qMenuY - document.body.scrollTop){
+					obj.style.top = "0";
+					obj.style.left = "0";
+					obj.style.position = "fixed";
+				}else{
+					obj.style.position = "";
+					obj.style.top = qMenuY;
+				}
+			};			
+			document.onscroll = function(){ sjTopFixed(topMenu); };
+			
+			function moveScroll(id){
+				document.body.scrollTop = id.offsetTop - 50;
+			}
+		</script>
+	</head>
+	
+	
+	
+	<body >
+		
+		
+		<div intro>
+			<h1 id="p0" style="color:skyblue;">SJValidator 1.0<input type="button" value="DOWNLOAD" onclick="location.href='sj-validator-1.0.zip'"/></h1>
+			&emsp;사용자가 FORM태그(input의 text/checkbox/radio/file, select, textarea)에 정보를 입력할 때 정확하고 빠르게 입력하도록 도와줍니다.<br/>
+	 		
+ 		
+	 		<br/><br/><h1>목차</h1>
+	 		<div intro id="topMenu">
+	 			<button index onclick="moveScroll(p0);" style="color:skyblue;">SJValidator 1.0</button>
+	 			&emsp;
+		 		<button index onclick="moveScroll(p1);">1. Load sj-validator</button>
+		 		&emsp;
+		 		<button index onclick="moveScroll(p2);">2. Attributes</button>
+		 		&emsp;
+		 		<button index onclick="moveScroll(p3);">3. Example & Check it up</button>
+		 		&emsp;
+		 		<button index onclick="moveScroll(p4);">4. Setup Error Message</button>
+	 		</div>
+ 		</div>
+ 		
+ 		<br/><br/><br/><br/><br/>
+ 		<h1 id="p1">1. Load sj-validator</h1>
+ 		<div box>
+ 			write in &lt;head&gt;<br/>
+ 			<div source><img src="img/import.png" /></div>			
+		</div><br/>		
+		
+		
+		<br/><br/><h1 id="p2">2. Attributes</h1>
+		sjvalidator를 적용하는 방법은 세 가지 방법이 있습니다.<br/>
+		각각 장점과 단점이 존재하므로 상황에 가장 적합한 방식을 하나 선택하면 됩니다.<br/>
+		<br/><br/>
+		에러메세지가 바로 아래에 출력되기 위해서는 div또는 span태그 등으로  감싸줘야 합니다.<br/>
+		(어렵게 말해서 ErrorMessage는 sjvalidator가 설정된 Form태그(input, select, textarea)의  부모노드의 막내로서 생기게 됩니다.)		
+		
+		<div box>			
+			<h2>Method A</h2>
+			가장 기본적인 속성 설정 방법입니다. <br/>
+			아래의 속성표를 참고하여 다양한 기능을 설정할 수 있습니다.
+			<div source><img src="img/method1.png" /></div>
+			
+			<br/><br/>속성 및 기능 표<br/>
+			<table attr><tr a>
+					<td>data-check</td>
+					<td>						
+						Set the type of validation.<br/>
+						The value of the name attribute of the element to set the Validation<br/>
+						(if set to data-validation attribute in HTML, it is not required)<br/>						
+						char, eng, kor, lang, email, num, money, file, form
+					</td>
+				</tr><tr b>
+					<td>data-minlength</td>
+					<td>Set the minimum letters</td>
+				</tr><tr a>
+					<td>data-maxlength</td>
+					<td>Set the maximum letters</td>
+				</tr><tr b>
+					<td>data-mincheck</td>
+					<td>Set the minimum number of checks on a checkbox</td>
+				</tr><tr a>
+					<td>data-maxcheck</td>
+					<td>Set the maximum number of checks on a checkbox</td>
+				</tr><tr b>
+					<td>data-minvalue</td>
+					<td>minimum value</td>
+				</tr><tr a>
+					<td>data-maxvalue</td>
+					<td>maximum value</td>
+				</tr><tr b>
+					<td>data-maxsize</td>
+					<td>
+						set the maximum file size for upload<br/>
+						(after the number, you are able to use units just like ‘kb,mb,gb,tb’)
+					</td>
+				</tr><tr a>
+					<td>data-filetype</td>
+					<td>set the type of file extension for upload</td>
+				</tr><tr b>
+					<td>data-group</td>
+					<td>When users fill in a group form like phone number, they have to pass the validation check.</td>
+				</tr><tr a>
+					<td>data-required</td>
+					<td>Set the necessary information.</td>
+				</tr><tr b>
+					<td>data-format</td>
+					<td>
+						format for a user to set<br/>
+						<br/>
+						※ Data Type<br/> 
+						n:number, c:character, a:all character,<br/>
+						yyyy:years, mm:month, dd:day from 01 to 31,<br/>
+						hh: hours from 00 to 23, mi:minutes from 00 to 59, ss:second from 00 to 59
+						
+						
+						
+						<br/><br/>
+						※ Divider<br/>
+						데이터 타입으로 규정된 알파벳(ncaymdhis)을 제외한<br/>
+						나머지 모든 문자는 구분자로서 자동입력됩니다.
+					</td>
+				</tr><tr a>
+					<td>data-no-auto-format</td>
+					<td>Canceling a divider which automatically fills in the added format.</td>
+				</tr><tr b>
+					<td>data-validator</td>
+					<td>위의 속성들을 일괄처리할 수 있습니다. ※방법 B를 참고</td>
+			</tr></table></br>
+			
+			<!-- TEST1 data-* 속성 -->
+			<div test>
+				TEST<br/>
+				소스의 회색영역을 수정하여  확인해 보세요.<br/>
+				You can edit gray and check it up.
+				<div source>
+					<span el>&lt;div&gt;</span><br/>
+					&emsp;<span el>&lt;input</span> 
+					<span prop>name</span>="test1" 
+					<span prop>type</span>="text" 
+					<span prop><input id="inputTest1" type="text" value='data-check="eng" data-minlength="5" data-maxlength="10" data-required'></span>
+					<span el>/&gt;</span><br/>
+					<span el>&lt;/div&gt;</span>			
+				</div>
+				
+				<br/><br/>
+				적용된 input태그 &gt;&gt;&gt;<br/>
+				<div run>
+					<span id="spanTest1"><input name="test1" type="text" /></span> 
+				</div>
+				
+			</div><br/>
+			
+		</div><br/>
+		
+		
+		
+		
+		<div box>			
+			<h2>Method B</h2>
+			data-validator, 이 속성 안에서는 'data-'를 뺀 속성명 여러 개를 열거하여 한 번에 적용할 수 있습니다.
+			<div source><img src="img/method2.png" /></div>
+			
+			<!-- TEST2 data-validator 속성 -->
+			<div test>
+				TEST<br/>
+				소스의 회색영역을 수정하여  확인해 보세요.
+				<div source>
+					<span el>&lt;div&gt;</span><br/>
+					&emsp;<span el>&lt;input</span> 
+					<span prop>name</span>="test2" 
+					<span prop>type</span>="text" 
+					<span prop>data-validator</span>=&quot;<input id="inputTest2" type="text2" value="check=eng, minLength=5, maxLength=10, required">&quot;
+					<span el>/&gt;</span><br/>
+					<span el>&lt;/div&gt;</span>
+				</div>
+				
+				<br/><br/>
+				적용된 input태그 &gt;&gt;&gt;<br/>
+				<div run>
+					<span id="spanTest2"><input name="test2" type="text"/></span>
+				</div>
+			</div><br/>
+			
+		</div><br/>
+		
+		
+		
+		
+		
+		<div box>	
+		<h2>Method C</h2>
+			자바스크립트에서 유효성기능을 설정할 수 있습니다. 더욱 고급스러운 기능을 구현하는 데 활용할 수 있습니다.<br/>			
+			JAVASCRIPT에서 적용할 경우에는 name속성을 넣어서 적용할 FORM태그를 설정합니다.
+			<div source><img src="img/method3.png" /></div>
+			
+			<!-- TEST3 Setup in javascript -->
+			<div test>
+				TEST<br/>
+				소스의 회색영역을 수정하여  확인해 보세요.
+				<div source>
+					<span el>&lt;script&gt;</span><br/>
+					&emsp;validator.add('<input id="scriptTest" type="text" value="name=test2, minLength=5, maxLength=10">');<br/>			 
+					<span el>&lt;/script&gt;</span>				
+				</div>				
+				수정 후 <input type="button" value="적용" onclick="runScript();" />버튼을 누르고, 위의 FORM태그에서 확인해 보세요.
+			</div><br/>
+			
+		</div><br/>		
+		
+		
+		
+		<br/><br/><br/><br/><br/>
+		<h1 id="p3">3. Example & Check it up</h1>
+		방법 B를 적용한 예제를 통해 하나씩 확인해 보세요. 
+		
+		<form name="empForm"  data-validator="check=form" />			
+			<div box>
+				Length<br/>
+				<div source><img src="img/start.png" /></div>
+				
+				<br/><br/>
+				적용된 input태그 &gt;&gt;&gt;<br/>				
+				<div run><input name="start" type="text" data-validator="minLength=5, maxLength=10" /></div>
+			</div><br/>			
+			
+			<div box>
+				Only Char<br/>
+				<div source><img src="img/char.png" /></div>
+				<div run><input name="char" type="text" data-validator="check=char, minLength=5, maxLength=10" /></div>
+			</div><br/>
+			
+			<div box>
+				Only English Char<br/>
+				<div source><img src="img/eng.png" /></div>
+				<div run><input name="eng" type="text" data-validator="check=eng, minLength=5, maxLength=10, required" /></div>
+			</div><br/>
+			
+			<div box>
+				Only Korean Char<br/>
+				<div source><img src="img/kor.png" /></div>
+				<div run><input name="kor" type="text" data-validator="check=kor, minLength=5, maxLength=10, required" /></div>
+			</div><br/>			
+			
+			<div box>
+				Char Except English<br/>
+				<div source><img src="img/lang.png" /></div>
+				<div run><input name="lang" type="text" data-validator="check=lang, minLength=5, maxLength=10, required" /></div>
+			</div><br/>
+			
+			<div box>
+				only Number<br/>
+				<div source><img src="img/number.png" /></div>
+				<div run><input name="number" type="text" data-validator="check=num, maxLength=5, minValue=5, maxValue=50000, required" /></div>
+			</div><br/>
+			
+			<div box>
+				Email Format<br/>
+				<div source><img src="img/email.png" /></div>
+				<div run><input name="email" type="text" data-validator="check=email, minLength=5, maxLength=50, required" /></div>
+			</div><br/>
+			
+			<div box>
+				Money Format<br/>
+				숫자 세번째 자리마다 쉼표(,)를 찍어줍니다.<br/>
+				Form에 check속성을 form으로 입력하면 submit시  쉼표(,)를 제거하고 전송합니다.
+				<div source><img src="img/money.png" /></div>
+				<div run><input name="money" type="text" data-validator="check=money, maxLength=15" /></div>
+			</div><br/>
+			
+			
+			<div box>
+				Group<br/>
+				같은 Group 이름으로 묶이면, 그 Group은 모두 백지 상태이거나 모두 유효성검사에 통과해야만 합니다. </br>
+				<div source><img src="img/phone123.png" /></div>
+				<div run>
+					<input name="phone1" type="text" data-validator="check=num, group=phone, minLength=3, maxLength=3" />
+					<input name="phone2" type="text" data-validator="check=num, group=phone, minLength=4, maxLength=4" />
+					<input name="phone3" type="text" data-validator="check=num, group=phone, minLength=4, maxLength=4" />
+				</div>
+			</div><br/>
+			
+			<div box>
+				Date auto-format<br/>
+				사용자 지정 형식을 정합니다. &emsp;※ 참조:<input type="button" value="2. Attributes" onclick="moveScroll(p2);">의 표)</br>
+				날짜형식을 지정할 수 있습니다.<br/> 				 
+				<div source><img src="img/date.png" /></div>
+				<div run><input name="date" type="text" data-validator="format=yyyy-mm-dd, required" /></div>
+			</div><br/>
+
+			<div box>
+				PhoneNumber auto-format<br/>
+				사용자 지정 형식을 정합니다. &emsp;※ 참조:<input type="button" value="2. Attributes" onclick="moveScroll(p2);">의 표)</br>
+				정해진 규칙의 코드를 입력할 때도 사용됩니다.<br/>
+				<div source><img src="img/phone.png" /></div>
+				<div run>
+					<input name="phone" type="text" data-validator="format=nnn-nnnn-nnnn, required" />
+				</div>
+			</div><br/>
+			
+			<div box>
+				Code auto-format<br/>
+				사용자 지정 형식을 정합니다. &emsp;※ 참조:<input type="button" value="2. Attributes" onclick="moveScroll(p2);">의 표)</br>
+				자신만의 규칙을 만들 수 있습니다.<br/>
+				<div source><img src="img/code.png" /></div>
+				<div run><input name="code" type="text" data-validator="format=mm-dd-cc-nnnn, required" /></div>
+			</div><br/>
+
+			<div box>
+				Custom auto-format<br/>
+				사용자 지정 형식을 정합니다. &emsp;※ 참조:<input type="button" value="2. Attributes" onclick="moveScroll(p2);">의 표)</br>
+				연속된 구분여러가지 규칙을 만들 수 있습니다.<br/>
+				<div source><img src="img/custom.png" /></div>
+				<div run><input name="custom" type="text" data-validator="format=mm월 dd일에는 nnnnn원만 주세요.aaaa, required" /></div>
+			</div><br/>
+			
+			<div box>
+				CheckBox<br/>
+				<div source><img src="img/fruit.png" /></div>
+				<div run>
+					apple<input name="fruit" type="checkbox" value="0" data-validator="minCheck=2, maxCheck=4, required" />
+					peer<input name="fruit" type="checkbox" value="1"  />
+					orange<input name="fruit" type="checkbox" value="2"  />
+					kiwi<input name="fruit" type="checkbox" value="3"  />
+					banana<input name="fruit" type="checkbox" value="4"  />
+					tomato<input name="fruit" type="checkbox" value="5"  />
+				</div>
+			</div><br/>
+			
+			<div box>
+				Radio<br/>
+				<div source><img src="img/sex.png" /></div>
+				<div run>
+					Female<input name="sex" type="radio" value="F" data-validator="required" />
+					Male<input name="sex" type="radio" value="M" />
+				</div>
+			</div><br/>
+			
+			<div box>
+				Select<br/>
+				<div source><img src="img/laughtSound.png" /></div>
+				<div run>
+					<select name="laughtSound"  data-validator="required" >
+						<option value="" checked>::What's your laught sound::</option>
+						<option value="hohoho">hohoho</option>
+						<option value="hehehe">hehehe</option>
+						<option value="hihihi">hihihi</option>
+						<option value="hhhhhh">hhhhhh</option>
+					</select>
+				</div>
+			</div><br/>
+			
+			
+			<div box>
+				File<br/>
+				<div source><img src="img/file.png" /></div>
+				<div run><input name="file" type="file" data-validator="maxSize=100kb, fileType=gif/jpg/png/bmp/, required"/></div>
+			</div><br/>
+			
+			
+			
+			<div box>
+				Form<br/>
+				check속성을 form으로 입력하면, submit버튼으로 데이터를 전송할 때, 자동으로 sjvalidator가 설정된 모든 FORM태그의 유효성검사를 실시 합니다.<br/>				
+				<div source><img src="img/form.png" /></div>
+			</div><br/>
+			
+			<div box>
+				Submit<br/>
+				<div source><img src="img/submit.png" /></div>
+				<div run><input type="submit" /></div>
+				
+				<br/><br/>
+				JAVASCRIPT로 submit()을 호출할 경우, onsubmit()이벤트를 거치지 않습니다.<br/>
+				떄문에 자동 유효성검사를 실시하지 않게 됩니다. 그때는 다음과 같이 해주시면 해결가능합니다.<br/>
+				<div source>
+					if(empForm.onsubmit()){empForm.submit()};<br/>
+				</div>      
+				※ empForm은 FORM태그의 name속성 값
+			</div>
+		</form>		
+		
+		
+		
+		<br/><br/><br/><br/><br/>
+		<h1 id="p4">4. Setup Error Message</h1>		
+		<div box>
+			기본설정된 에러메세지 <br/>
+			<div source>				
+				<img src="img/editErrorMsg1.png" / >
+			</div>
+			
+			<br/><br/>ErrorMessage 변경 예제<br/>
+			<div source>
+				<img src="img/setupErrorMsg.png" />
+			</div>
+			
+			<br/><br/>변경 후 에러메세지<br/>
+			<div source>
+				<img src="img/editErrorMsg2.png" / >
+			</div>
+			
+				 		
+			<br/><br/>ErrorMessage Codes
+			<table><tr a>
+				<td>MINLENGTH</td>
+				<td>'최소 {}자 이상 입력해 주세요.'</td>	 	 
+			</tr><tr b>
+				<td>MAXLENGTH</td>
+				<td>'최대 {}자까지만 입력 가능합니다.'</td>
+			</tr><tr a>
+				<td>MINVALUE</td>
+				<td>'{}이상 입력해 주세요.'</td>
+			</tr><tr b>
+				<td>MAXVALUE</td>
+				<td>'최대 {}까지 입력가능합니다.'</td>
+			</tr><tr a>
+				<td>MINCHECK</td>
+				<td>'{}개 이상 체크해 주세요.'</td>
+			</tr><tr b>
+				<td>MAXCHECK</td>
+				<td>'최대 {}까지 체크가 가능합니다.'</td>
+			</tr><tr a>
+				<td>FILETYPE</td>
+				<td>'{}파일만 가능합니다.'</td>
+			</tr><tr b>
+				<td>MAXSIZE</td>
+				<td>'용량제한 : {}이하'</td>
+			</tr><tr a>
+				<td>REQUIRED</td>
+				<td>'필수 입력 사항입니다.'</td>
+			</tr><tr b>
+				<td>GROUP</td>
+				<td>'모두 입력해 주세요.'</td>
+			</tr><tr a>
+				<td>KEYCHAR</td>
+				<td>'문자만 입력 가능합니다.'</td>
+			</tr><tr b>
+				<td>KEYNUM</td>
+				<td>'숫자만 입력 가능합니다.'</td>
+			</tr><tr a>
+				<td>KEYENG</td>
+				<td>'영어만 입력 가능합니다.'</td>
+			</tr><tr b>
+				<td>KEYKOR</td>
+				<td>'한글만 입력 가능합니다.'</td>
+			</tr><tr a>
+				<td>KEYLANG</td>
+				<td>'영어 외 문자만 입력 가능합니다.'</td>
+			</tr><tr b>
+				<td>FORMATCHAR</td>
+				<td>'문자 형식만 가능합니다.'</td>
+			</tr><tr a>
+				<td>FORMATNUM</td>
+				<td>'숫자 형식만 가능합니다.'</td>
+			</tr><tr b>
+				<td>FORMATENG</td>
+				<td>'영어만 가능합니다.'</td>
+			</tr><tr a>
+				<td>FORMATKOR</td>
+				<td>'한글만 가능합니다.'</td>
+			</tr><tr b>
+				<td>FORMATLANG</td>
+				<td>'영어 외 문자만 가능합니다.'</td>
+			</tr><tr a>
+				<td>FORMATEMAIL</td>
+				<td>'EMAIL형식만 가능합니다.'</td>
+			</tr><tr b>
+				<td>FORMAT</td>
+				<td>'{} 형식에 맞지 않습니다.'</td>
+			</tr><tr a>	 	
+			</tr></table>
+			※ '{}'을 입력해야만 수치가 들어갑니다.<br/>
+
+			<br/><br/>						   		
+			<!-- TEST4 Setup ErrorMessage -->
+			<div test>
+				TEST<br/>
+				소스의 회색영역을 수정하여  확인해 보세요.
+				<div source>
+					<span el>&lt;script&gt;</span><br/>
+					&emsp;errorManager.setErrorSign('<input id="scriptTest1" type="text" value="*">');<br/>				 
+					&emsp;errorManager.setNextErrorDivider('<input id="scriptTest2" type="text" value="<br/>">');<br/>			
+			 		&emsp;errorManager.setErrorMsg('<input id="scriptTest3" type="text" value="MAXLENGTH">'
+			 		, '<input id="scriptTest4" type="text" value="최대 {}자까지만 입력 가능합니다.">');<br/>
+					<span el>&lt;/script&gt;</span>				
+				</div>
+				수정 후 <input type="button" value="적용" onclick="runScript2();" />버튼을 누르고, <input type="button" value="3. Example & Check it up" onclick="moveScroll(p3);">의 FORM태그에서 에러메세지를 확인해 보세요.
+			</div><br/>
+		</div>
+	</body>
+	
+	
+	
+	
+	
+	<script>
+		/* test */
+		inputTest1.onchange = function(){
+			this.style.width = (this.value.length <= 0) ? 10 : this.value.length * 10;
+			spanTest1.innerHTML = '<input name="test1" type="text" ' +inputTest1.value+ ' />';
+			validator.setValidatorAfterLoad();
+		};				
+		inputTest1.onkeyup = function(){inputTest1.onchange();};
+		inputTest1.onchange();
+	
+		/* test2 */
+		inputTest2.onchange = function(){
+			this.style.width = (this.value.length <= 0) ? 10 : this.value.length * 10;
+			document.getElementsByName('test2')[0].setAttribute("data-validator", this.value);
+			document.getElementsByName('test2')[0].value = '';
+			validator.setValidatorAfterLoad();
+		};				
+		inputTest2.onkeyup = function(){inputTest2.onchange();};
+		inputTest2.onchange();		
+
+		/* test3 */
+		scriptTest.onchange = function(){
+			this.style.width = (this.value.length <= 0) ? 15 : this.value.length * 15;
+		};				
+		scriptTest.onkeyup = function(){scriptTest.onchange();};
+		scriptTest.onchange();
+		
+		/* test4 */
+		scriptTest1.onchange = function(){
+			this.style.width = (this.value.length <= 0) ? 15 : this.value.length * 15;
+		};				
+		scriptTest1.onkeyup = function(){scriptTest1.onchange();};
+		scriptTest1.onchange();
+		
+		scriptTest2.onchange = function(){
+			this.style.width = (this.value.length <= 0) ? 15 : this.value.length * 15;
+		};				
+		scriptTest2.onkeyup = function(){scriptTest2.onchange();};
+		scriptTest2.onchange();
+		
+		scriptTest3.onchange = function(){
+			this.style.width = (this.value.length <= 0) ? 15 : this.value.length * 15;
+		};				
+		scriptTest3.onkeyup = function(){scriptTest3.onchange();};
+		scriptTest3.onchange();
+		
+		scriptTest4.onchange = function(){
+			this.style.width = (this.value.length <= 0) ? 15 : this.value.length * 15;
+		};				
+		scriptTest4.onkeyup = function(){scriptTest4.onchange();};
+		scriptTest4.onchange();
+		
+		
+		function runScript(){
+			validator.add(scriptTest.value);				
+		}
+		function runScript2(){
+			errorManager.setErrorSign(scriptTest1.value);
+			errorManager.setNextErrorDivider(scriptTest2.value);
+			errorManager.setErrorMsg(scriptTest3.value, scriptTest4.value);
+		}
+	</script>
+</html>
