@@ -53,7 +53,6 @@ function SJValidator(){
 	var allVMap = [];
 	this.nowSubmitForm;
 	
-	/* 모바일에서 랜더링 후 도중에 새로 객체 만들어서 정의할 때, 자꾸 안먹혀서 이메서드로 재차 확인하고 보내게 하기 */
 	this.submit = function(someObj){
 		/** <form>의 name이 직접 오든, 그 안의 요소가 오든 <form>을 찾아서 searchForm변수에 연결한다. **/
 		var searchForm = someObj;
@@ -461,7 +460,7 @@ function checkOnSubmit(event, allVMap){
  *****************************/
 function checkOnKeyDown(event, input, oneVMap){
 	/* (del, backspace)가 아닌 기능키이면 그냥 return true*/	
-	if (checkKeyFnDelete(event)) return true;
+//	if (checkKeyFnDelete(event)) return true;
 	if (checkKeyFn(event) && !checkKeyFnDelete(event)) return true;
 	
 	var checkType = true;
@@ -498,14 +497,15 @@ function checkOnKeyDown(event, input, oneVMap){
 		if (oneVMap['memoryOfValue'] == undefined) oneVMap['memoryOfValue'] = input.value;
 		if (oneVMap['memoryOfCp'] == undefined) oneVMap['memoryOfCp'] = sjvHelper.getCaretPos(input);
 	} 
-	
 	/* 최대 글자 체크 */	
 	if (maxLength!=undefined){		
 		/* check가 money일 경우 표시된 ,를 제외한 글자 수 */
 		if (check == 'money'){
 			checkLength = checkKeyMax(event, input.value.setOnlyNum(), maxLength);
-		}else {
-			checkLength = checkKeyMax(event, input.value, maxLength);	
+		}else {			
+			if (!checkKeyFnDelete(event)){
+				checkLength = checkKeyMax(event, input.value, maxLength);	
+			}
 		}
 		/* 영역이 선택되어있을 경우 최대글자체크를 통과시킨다. */
 		if (!checkLength && 0 < sjvHelper.getSelectionRange(input)) checkLength = true;
@@ -600,7 +600,8 @@ function checkOnKeyUp(event, input, oneVMap){
 	}
 	
 	/* caretPosition 설정 */
-	if(moveCp > 0) sjvHelper.setCaretPos(input, cp + moveCp);
+//	if(moveCp > 0) sjvHelper.setCaretPos(input, cp + moveCp);
+	sjvHelper.setCaretPos(input, cp + moveCp);
 }
 /*************************
  *  When blur event occur 
@@ -1025,9 +1026,9 @@ function SJValidatorHelper(){
 	 ***************************/
 	String.prototype.trim = function(){ return this.replace(/^\s*/ ,"").replace(/\s*$/ ,""); };
 	String.prototype.startsWith = function(str){ return this.indexOf(str)==0; };
-	String.prototype.isFormatChar = function(){ return (this.isFormatEng() || this.isFormatKor()); };
+	String.prototype.isFormatChar = function(){ return (this.search(/[^a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ]/ig) == -1); };
 	String.prototype.isFormatEng = function(){ return (this.search(/[^a-zA-Z]/ig) == -1); };
-	String.prototype.isFormatKor = function(){ return (this.search(/([^가-힣ㄱ-ㅎㅏ-ㅣ])/i) == -1); };
+	String.prototype.isFormatKor = function(){ return (this.search(/([^가-힣ㄱ-ㅎㅏ-ㅣ])/ig) == -1); };
 	String.prototype.isFormatLang = function(){ return (this.search(/([a-zA-Z0-9!@#$%^&*()-_|\+.,])/i) == -1); };
 	String.prototype.isFormatNum = function(){ return (this.search(/^(\d+)$/ig) != -1); };
 	String.prototype.isFormatEmail = function(){ return (this.search(/^(\w+)[@](\w+)[.](\w+)$/ig) != -1); };
